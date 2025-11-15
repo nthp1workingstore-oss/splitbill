@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <title>หารค่าแอลกอฮอล์และค่าอาหาร (By Nthp1.exe)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#a855f7" />
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: "Prompt", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      background:
+        linear-gradient(45deg, #f5e8ff 25%, transparent 25%) -10px 0,
+        linear-gradient(45deg, transparent 75%, #f5e8ff 75%) -10px 0,
+        linear-gradient(45deg, transparent 75%, #fdfbff 75%),
+        linear-gradient(45deg, #fdfbff 25%, #f3d9ff 25%);
+      background-size: 40px 40px;
+      background-color: #fdfbff;
+    }
+    .card {
+      width: 100%;
+      max-width: 540px;
+      background: #ffffff;
+      border-radius: 24px;
+      box-shadow: 0 18px 40px rgba(120, 81, 169, 0.25);
+      overflow: hidden;
+      border: 3px solid #e3d0ff;
+      position: relative;
+    }
+    .card-header {
+      background: linear-gradient(135deg, #a855f7, #c084fc);
+      padding: 18px 20px 16px;
+      color: #fff;
+      text-align: center;
+      position: relative;
+    }
+    .card-header h1 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.4;
+      font-weight: 700;
+    }
+    .card-header small {
+      display: block;
+      margin-top: 4px;
+      font-size: 12px;
+      opacity: 0.95;
+    }
+    .pill {
+      position: absolute;
+      right: 14px;
+      top: 14px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 10px;
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      backdrop-filter: blur(4px);
+    }
+    .card-body {
+      padding: 16px 16px 8px;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .form-group {
+      margin-bottom: 12px;
+    }
+    label {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 4px;
+      color: #5a4b7a;
+      font-weight: 600;
+    }
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    input[type="file"] {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 2px solid #e4ddff;
+      font-size: 14px;
+      outline: none;
+      background-color: #fbf8ff;
+      transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s, transform 0.08s;
+    }
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    input[type="date"]:focus,
+    input[type="file"]:focus {
+      border-color: #b388ff;
+      box-shadow: 0 0 0 2px rgba(179, 136, 255, 0.25);
+      background-color: #ffffff;
+      transform: translateY(-1px);
+    }
+    input[readonly] {
+      background-color: #f5f1ff;
+      color: #6b5a99;
+      font-weight: 600;
+    }
+    .hint {
+      font-size: 11px;
+      color: #a08ac7;
+      margin-top: 2px;
+    }
+    .btn-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      flex: 1;
+      padding: 9px 12px;
+      background: linear-gradient(135deg, #a855f7, #c084fc);
+      color: #fff;
+      border: none;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 12px 25px rgba(148, 93, 214, 0.4);
+      transition: transform 0.08s ease, box-shadow 0.08s ease, opacity 0.08s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      text-align: center;
+      min-width: 0;
+    }
+    .btn.secondary {
+      background: #ede9fe;
+      color: #6b21a8;
+      box-shadow: none;
+    }
+    .btn:active {
+      transform: translateY(1px);
+      box-shadow: 0 8px 18px rgba(148, 93, 214, 0.4);
+      opacity: 0.96;
+    }
+    .btn.secondary:active {
+      transform: translateY(1px);
+      box-shadow: 0 4px 10px rgba(148, 93, 214, 0.2);
+    }
+    .card-footer {
+      padding: 10px 16px 14px;
+      background: #faf7ff;
+      border-top: 2px dashed #e1d5ff;
+    }
+    .result-box {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 10px 12px;
+      border: 2px solid #e0d3ff;
+      font-size: 13px;
+      color: #4a3f6b;
+    }
+    .result-box strong {
+      color: #7c3aed;
+    }
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+    .result-row:last-child {
+      margin-bottom: 0;
+    }
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 10px;
+      background: #ede9fe;
+      color: #6d28d9;
+      margin-left: 4px;
+    }
+    .slip-preview {
+      margin-top: 6px;
+      font-size: 11px;
+      color: #6b21a8;
+      display: none;
+    }
+    .slip-preview.visible {
+      display: block;
+    }
+    .receipt {
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px dashed #e0d3ff;
+      font-size: 12px;
+      color: #4b3f6a;
+      white-space: pre-line;
+    }
+    .receipt-title {
+      font-weight: 700;
+      color: #7c3aed;
+      margin-bottom: 4px;
+    }
+    .copy-toast {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      transform: translateX(-50%);
+      background: #22c55e;
+      color: white;
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      box-shadow: 0 8px 20px rgba(22, 163, 74, 0.4);
+      display: none;
+      z-index: 50;
+    }
+    .copy-toast.show {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      animation: fadeUp 1.2s ease-out forwards;
+    }
+    @keyframes fadeUp {
+      0% { opacity: 0; transform: translate(-50%, 8px); }
+      20% { opacity: 1; transform: translate(-50%, 0); }
+      80% { opacity: 1; transform: translate(-50%, 0); }
+      100% { opacity: 0; transform: translate(-50%, 4px); }
+    }
+    @media (max-width: 480px) {
+      .card-header h1 { font-size: 16px; }
+      .btn { font-size: 13px; padding: 8px 10px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="card-header">
+      <div class="pill">Nthp1.exe • v2.0</div>
+      <h1>หารค่าแอลกอฮอล์และค่าอาหาร (By Nthp1.exe)</h1>
+      <small>3ขวดพร้อมกัน • แยกคนดื่ม / ไม่ดื่ม + แชร์ไลน์ได้</small>
+    </div>
+
+    <div class="card-body">
+      <div class="form-group">
+        <label for="date">วัน / เดือน / ปี</label>
+        <input type="date" id="date" />
+      </div>
+
+      <div class="form-group">
+        <label for="alcohol">ค่าแอลกอฮอล์และมิกเซอร์ (บาท)</label>
+        <input type="number" id="alcohol" min="0" step="0.01" placeholder="เช่น 1500" />
+        <div class="hint">รวมค่าขวด เหล้า เบียร์ ไวน์ มิกเซอร์ทั้งหมด (หารเฉพาะคนดื่ม)</div>
+      </div>
+
+      <div class="form-group">
+        <label for="food">ค่าอาหาร (บาท)</label>
+        <input type="number" id="food" min="0" step="0.01" placeholder="เช่น 900" />
+        <div class="hint">อาหาร/กับแกล้ม หารทุกคน (ดื่ม + ไม่ดื่ม)</div>
+      </div>
+
+      <div class="grid-2">
+        <div class="form-group">
+          <label for="maleDrink">ผู้ชายที่ดื่ม (คน)</label>
+          <input type="number" id="maleDrink" min="0" step="1" placeholder="0" />
+        </div>
+        <div class="form-group">
+          <label for="femaleDrink">ผู้หญิงที่ดื่ม (คน)</label>
+          <input type="number" id="femaleDrink" min="0" step="1" placeholder="0" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="nonDrinkers">
+          จำนวนคนที่ไม่ดื่ม
+          <span class="badge">แยกต่างหาก</span>
+        </label>
+        <input type="number" id="nonDrinkers" min="0" step="1" placeholder="0" />
+        <div class="hint">เช่น คนที่กินแต่อาหาร ไม่ดื่มแอลกอฮอล์</div>
+      </div>
+
+      <div class="grid-2">
+        <div class="form-group">
+          <label for="totalDrinkers">
+            รวมจำนวนคนที่ดื่ม
+            <span class="badge">คำนวณให้</span>
+          </label>
+          <input type="number" id="totalDrinkers" readonly />
+        </div>
+        <div class="form-group">
+          <label for="totalPeople">
+            รวมจำนวนคนทั้งหมด
+            <span class="badge">ดื่ม + ไม่ดื่ม</span>
+          </label>
+          <input type="number" id="totalPeople" readonly />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="slip">แนบรูปสลิปโอนเงินหรือใบเสร็จ (ชื่อไฟล์/หมายเหตุ)</label>
+        <input type="text" id="slip" placeholder="เช่น IMG_1234 หรือ ใบเสร็จโต๊ะ 8" />
+        <div id="slipInfo" class="slip-preview">แนบข้อมูลแล้ว: <span id="slipName"></span></div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn" id="calcBtn">คำนวณการหาร 💸</button>
+        <button class="btn secondary" id="resetBtn">ล้างค่ารีเซ็ต 🔄</button>
+      </div>
+
+      <div class="btn-row" style="margin-top: 6px;">
+        <button class="btn secondary" id="shareBtn">คัดลอกไปแชร์ไลน์ 💬</button>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <div class="result-box">
+        <div class="result-row">
+          <span>ยอดรวมทั้งหมด</span>
+          <span><strong id="totalAmount">0.00</strong> บาท</span>
+        </div>
+        <div class="result-row">
+          <span>จำนวนคนดื่ม</span>
+          <span><strong id="displayDrinkers">0</strong> คน</span>
+        </div>
+        <div class="result-row">
+          <span>จำนวนคนไม่ดื่ม</span>
+          <span><strong id="displayNonDrinkers">0</strong> คน</span>
+        </div>
+        <div class="result-row">
+          <span>คนดื่มจ่าย</span>
+          <span><strong id="perDrinker">0.00</strong> บาท/คน</span>
+        </div>
+        <div class="result-row">
+          <span>คนไม่ดื่มจ่าย</span>
+          <span><strong id="perNonDrinker">0.00</strong> บาท/คน</span>
+        </div>
+
+        <div class="receipt">
+          <div class="receipt-title">🧾 สรุปบิลสำหรับแชร์</div>
+          <div id="receiptText">กรุณากรอกข้อมูลและกด "คำนวณการหาร" เพื่อดูสรุปบิล</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="copyToast" class="copy-toast">
+    ✅ คัดลอกสรุปไปคลิปบอร์ดแล้ว
+  </div>
+
+  <script>
+    const dateInput = document.getElementById("date");
+    const alcoholInput = document.getElementById("alcohol");
+    const foodInput = document.getElementById("food");
+    const maleDrinkInput = document.getElementById("maleDrink");
+    const femaleDrinkInput = document.getElementById("femaleDrink");
+    const nonDrinkersInput = document.getElementById("nonDrinkers");
+    const slipInput = document.getElementById("slip");
+
+    const slipInfo = document.getElementById("slipInfo");
+    const slipName = document.getElementById("slipName");
+
+    const totalDrinkersInput = document.getElementById("totalDrinkers");
+    const totalPeopleInput = document.getElementById("totalPeople");
+
+    const displayDrinkers = document.getElementById("displayDrinkers");
+    const displayNonDrinkers = document.getElementById("displayNonDrinkers");
+
+    const totalAmountSpan = document.getElementById("totalAmount");
+    const perDrinkerSpan = document.getElementById("perDrinker");
+    const perNonDrinkerSpan = document.getElementById("perNonDrinker");
+    const receiptText = document.getElementById("receiptText");
+
+    const calcBtn = document.getElementById("calcBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const shareBtn = document.getElementById("shareBtn");
+    const copyToast = document.getElementById("copyToast");
+
+    function parseNum(value) {
+      const n = parseFloat(value);
+      return isNaN(n) ? 0 : n;
+    }
+
+    function updateCounts() {
+      const maleDrink = parseNum(maleDrinkInput.value);
+      const femaleDrink = parseNum(femaleDrinkInput.value);
+      const nonDrink = parseNum(nonDrinkersInput.value);
+
+      const drinkers = maleDrink + femaleDrink;
+      const totalPeople = drinkers + nonDrink;
+
+      totalDrinkersInput.value = drinkers || "";
+      totalPeopleInput.value = totalPeople || "";
+
+      displayDrinkers.textContent = drinkers;
+      displayNonDrinkers.textContent = nonDrink;
+
+      return { drinkers, nonDrink, totalPeople };
+    }
+
+    function formatDateThai(isoDate) {
+      if (!isoDate) return "-";
+      const [y, m, d] = isoDate.split("-");
+      return `${d}/${m}/${parseInt(y, 10) + 543}`;
+    }
+
+    function calculate() {
+      const alcohol = parseNum(alcoholInput.value);
+      const food = parseNum(foodInput.value);
+
+      const { drinkers, nonDrink, totalPeople } = updateCounts();
+
+      const totalAmount = alcohol + food;
+      totalAmountSpan.textContent = totalAmount.toFixed(2);
+
+      if (totalPeople <= 0) {
+        perDrinkerSpan.textContent = "0.00";
+        perNonDrinkerSpan.textContent = "0.00";
+        receiptText.textContent = "กรุณากรอกจำนวนคนอย่างน้อย 1 คนก่อนนะครับ 🍻";
+        saveState();
+        return;
+      }
+
+      const dateStr = formatDateThai(dateInput.value);
+      const slipStr = slipInput.value.trim() || "-";
+
+      if (drinkers === 0) {
+        const foodPerPerson = food / totalPeople;
+        perDrinkerSpan.textContent = "0.00";
+        perNonDrinkerSpan.textContent = foodPerPerson.toFixed(2);
+
+        const text = [
+          `วัน/เดือน/ปี: ${dateStr}`,
+          `ค่าแอลกอฮอล์และมิกเซอร์: ${alcohol.toFixed(2)} บาท (ไม่มีคนดื่ม)`,
+          `ค่าอาหาร: ${food.toFixed(2)} บาท`,
+          `รวมทั้งหมด: ${totalAmount.toFixed(2)} บาท`,
+          "",
+          `จำนวนคนทั้งหมด: ${totalPeople} คน`,
+          `🍽️ ทุกคน จ่ายคนละ: ${foodPerPerson.toFixed(2)} บาท`,
+          "",
+          `สลิป/หมายเหตุ: ${slipStr}`,
+          `(คำนวณโดย Nthp1.exe)`
+        ].join("\n");
+
+        receiptText.textContent = text;
+        saveState();
+        return;
+      }
+
+      const alcoholPerDrinker = alcohol / drinkers;
+      const foodPerPerson = food / totalPeople;
+
+      const perDrinker = alcoholPerDrinker + foodPerPerson;
+      const perNonDrinker = foodPerPerson;
+
+      perDrinkerSpan.textContent = perDrinker.toFixed(2);
+      perNonDrinkerSpan.textContent = perNonDrinker.toFixed(2);
+
+      const receiptLines = [
+        `วัน/เดือน/ปี: ${dateStr}`,
+        `ค่าแอลกอฮอล์และมิกเซอร์: ${alcohol.toFixed(2)} บาท`,
+        `ค่าอาหาร: ${food.toFixed(2)} บาท`,
+        `รวมทั้งหมด: ${totalAmount.toFixed(2)} บาท`,
+        "",
+        `จำนวนคนดื่ม: ${drinkers} คน`,
+        `จำนวนคนไม่ดื่ม: ${nonDrink} คน`,
+        `รวมทั้งหมด: ${totalPeople} คน`,
+        "",
+        `🍻 คนดื่ม จ่ายคนละ: ${perDrinker.toFixed(2)} บาท`,
+        `🍽️ คนไม่ดื่ม จ่ายคนละ: ${perNonDrinker.toFixed(2)} บาท`,
+        "",
+        `สลิป/หมายเหตุ: ${slipStr}`,
+        `(คำนวณโดย Nthp1.exe)`
+      ];
+
+      receiptText.textContent = receiptLines.join("\n");
+      saveState();
+    }
+
+    function resetAll() {
+      dateInput.value = "";
+      alcoholInput.value = "";
+      foodInput.value = "";
+      maleDrinkInput.value = "";
+      femaleDrinkInput.value = "";
+      nonDrinkersInput.value = "";
+      slipInput.value = "";
+      slipName.textContent = "";
+      slipInfo.classList.remove("visible");
+
+      totalDrinkersInput.value = "";
+      totalPeopleInput.value = "";
+      displayDrinkers.textContent = "0";
+      displayNonDrinkers.textContent = "0";
+      totalAmountSpan.textContent = "0.00";
+      perDrinkerSpan.textContent = "0.00";
+      perNonDrinkerSpan.textContent = "0.00";
+      receiptText.textContent = 'กรุณากรอกข้อมูลและกด "คำนวณการหาร" เพื่อดูสรุปบิล';
+
+      localStorage.removeItem("nthp1_split_state");
+    }
+
+    function showToast() {
+      copyToast.classList.add("show");
+      setTimeout(() => {
+        copyToast.classList.remove("show");
+      }, 1200);
+    }
+
+    async function copyAndShare() {
+      const text = receiptText.textContent.trim();
+      if (!text || text.startsWith("กรุณากรอก")) {
+        alert("กรุณากรอกข้อมูลและกดคำนวณก่อนนะครับ ✨");
+        return;
+      }
+
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(text);
+          showToast();
+        }
+      } catch (e) {
+        console.log("Clipboard copy failed:", e);
+      }
+
+      if (navigator.share) {
+        try {
+          await navigator.share({ text });
+          return;
+        } catch (e) {
+          console.log("Web Share cancelled or failed:", e);
+        }
+      }
+
+      const lineUrl = "https://line.me/R/msg/text/?" + encodeURIComponent(text);
+      window.open(lineUrl, "_blank");
+    }
+
+    function saveState() {
+      const state = {
+        date: dateInput.value,
+        alcohol: alcoholInput.value,
+        food: foodInput.value,
+        maleDrink: maleDrinkInput.value,
+        femaleDrink: femaleDrinkInput.value,
+        nonDrinkers: nonDrinkersInput.value,
+        slip: slipInput.value,
+        totalAmount: totalAmountSpan.textContent,
+        perDrinker: perDrinkerSpan.textContent,
+        perNonDrinker: perNonDrinkerSpan.textContent,
+        receipt: receiptText.textContent,
+        totalDrinkers: totalDrinkersInput.value,
+        totalPeople: totalPeopleInput.value,
+        displayNonDrinkers: displayNonDrinkers.textContent
+      };
+      try {
+        localStorage.setItem("nthp1_split_state", JSON.stringify(state));
+      } catch (e) {
+        console.log("Cannot save state:", e);
+      }
+    }
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem("nthp1_split_state");
+        if (!raw) return;
+        const s = JSON.parse(raw);
+        dateInput.value = s.date || "";
+        alcoholInput.value = s.alcohol || "";
+        foodInput.value = s.food || "";
+        maleDrinkInput.value = s.maleDrink || "";
+        femaleDrinkInput.value = s.femaleDrink || "";
+        nonDrinkersInput.value = s.nonDrinkers || "";
+        slipInput.value = s.slip || "";
+
+        if (s.slip) {
+          slipName.textContent = s.slip;
+          slipInfo.classList.add("visible");
+        }
+
+        totalAmountSpan.textContent = s.totalAmount || "0.00";
+        perDrinkerSpan.textContent = s.perDrinker || "0.00";
+        perNonDrinkerSpan.textContent = s.perNonDrinker || "0.00";
+        receiptText.textContent = s.receipt || 'กรุณากรอกข้อมูลและกด "คำนวณการหาร" เพื่อดูสรุปบิล';
+        totalDrinkersInput.value = s.totalDrinkers || "";
+        totalPeopleInput.value = s.totalPeople || "";
+        displayDrinkers.textContent = s.totalDrinkers || "0";
+        displayNonDrinkers.textContent = s.displayNonDrinkers || "0";
+      } catch (e) {
+        console.log("Cannot load state:", e);
+      }
+    }
+
+    maleDrinkInput.addEventListener("input", () => { updateCounts(); saveState(); });
+    femaleDrinkInput.addEventListener("input", () => { updateCounts(); saveState(); });
+    nonDrinkersInput.addEventListener("input", () => { updateCounts(); saveState(); });
+    slipInput.addEventListener("input", () => {
+      const val = slipInput.value.trim();
+      if (val) {
+        slipName.textContent = val;
+        slipInfo.classList.add("visible");
+      } else {
+        slipName.textContent = "";
+        slipInfo.classList.remove("visible");
+      }
+      saveState();
+    });
+
+    calcBtn.addEventListener("click", calculate);
+    resetBtn.addEventListener("click", resetAll);
+    shareBtn.addEventListener("click", copyAndShare);
+
+    loadState();
+    updateCounts();
+  </script>
+</body>
+</html>
